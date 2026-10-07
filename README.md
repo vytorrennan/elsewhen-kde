@@ -14,8 +14,7 @@ Tested on CachyOS with Plasma 6.7.5 and Qt 6.11.2, including use in a panel
 and in a standalone window.
 
 <p>
-  <img src="docs/clocks.png" width="290" alt="Elsewhen city clocks, weather, and daylight strips">
-  <img src="docs/globe.png" width="290" alt="Elsewhen interactive globe centered on Tokyo">
+  <img src="docs/clocks.png" width="411" alt="Elsewhen running in a KDE panel with a dark theme, city clocks, weather, and daylight strips">
 </p>
 
 ## Use
