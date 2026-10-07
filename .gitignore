@@ -1,0 +1,11 @@
+# Native build output
+/native/Makefile
+/native/.qmake.stash
+/native/moc_predefs.h
+/native/*.moc
+/native/*.o
+*.so
+
+# Local previews and integration-test captures
+/*.png
+/*.log

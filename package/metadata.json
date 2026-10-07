@@ -1,0 +1,21 @@
+{
+  "KPlugin": {
+    "Id": "org.local.elsewhen",
+    "Name": "Elsewhen",
+    "Description": "Elsewhen world clock and interactive globe, adapted for Plasma 6",
+    "Icon": "globe",
+    "Authors": [
+      {
+        "Name": "Jason Fried / Omacom (original); local Plasma adaptation"
+      }
+    ],
+    "License": "MIT",
+    "Version": "1.0.0",
+    "Category": "Date and Time"
+  },
+  "KPackageStructure": "Plasma/Applet",
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-Provides": [
+    "org.kde.plasma.time"
+  ]
+}
