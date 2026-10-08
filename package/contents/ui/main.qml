@@ -18,8 +18,8 @@ PlasmoidItem {
         onClicked: applet.expanded = !applet.expanded
     }
     fullRepresentation: WorldClock {
-        Layout.minimumWidth: 388
-        Layout.minimumHeight: 540
+        Layout.minimumWidth: 320
+        Layout.minimumHeight: 300
         Layout.preferredWidth: 388
         Layout.preferredHeight: 600
         opened: applet.expanded || !applet.inPanel

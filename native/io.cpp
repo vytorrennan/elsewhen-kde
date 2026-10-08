@@ -9,6 +9,8 @@
 #include <QFontInfo>
 #include <QGuiApplication>
 
+namespace ElsewhenIo {
+
 class Native : public QObject {
   Q_OBJECT
 public:
@@ -39,7 +41,7 @@ class Process : public QObject, public QQmlParserStatus {
   Q_INTERFACES(QQmlParserStatus)
   Q_PROPERTY(QStringList command MEMBER m_command)
   Q_PROPERTY(bool running READ running WRITE setRunning NOTIFY runningChanged)
-  Q_PROPERTY(StdioCollector *stdout MEMBER m_stdout)
+  Q_PROPERTY(ElsewhenIo::StdioCollector *stdout MEMBER m_stdout)
 public:
   explicit Process(QObject *parent = nullptr) : QObject(parent) {
     connect(&m_process, &QProcess::readyReadStandardOutput, this, [this] { m_output += m_process.readAllStandardOutput(); });
@@ -120,4 +122,5 @@ public:
     qmlRegisterSingletonType<Native>(uri, 1, 0, "Native", [](QQmlEngine *, QJSEngine *) -> QObject * { return new Native; });
   }
 };
+} // namespace ElsewhenIo
 #include "io.moc"
