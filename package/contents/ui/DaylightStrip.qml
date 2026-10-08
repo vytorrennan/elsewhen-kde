@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import "Commons"
+import "Commons" as Compat
 import "Ui"
 import "Model.js" as Model
 import "Sun.js" as Sun
@@ -22,12 +22,12 @@ Item {
   property bool hovered: false
   property bool hour24: false
   property real moonPhase: 0
-  property color foreground: Color.foreground
+  property color foreground: Compat.Color.foreground
   property color fainter: Qt.darker(foreground, 2.1)
   property color daylightMarker: "#E5C736"
-  property string fontFamily: Style.font.family
+  property string fontFamily: Compat.Style.font.family
 
-  readonly property int trackHeight: Math.max(2, Style.space(3))
+  readonly property int trackHeight: Math.max(2, Compat.Style.space(3))
 
   // Which arrow's time is showing: its index, or Model.NO_CHIP.
   property int shownChip: Model.NO_CHIP
@@ -47,7 +47,7 @@ Item {
 
   onHoveredChanged: if (!hovered) dismissChips()
 
-  height: Style.space(18)
+  height: Compat.Style.space(18)
 
   // Keyed to local midnight, not the ticking clock, so the sun and the
   // Repeaters below rebuild once a day rather than once a second.
@@ -82,7 +82,7 @@ Item {
     anchors.verticalCenter: parent.verticalCenter
     height: strip.trackHeight
     radius: height / 2
-    color: Util.alpha(strip.foreground, 0.10)
+    color: Compat.Util.alpha(strip.foreground, 0.10)
 
     // Polar night has no band at all, rather than a zero-width one.
     Repeater {
@@ -95,13 +95,13 @@ Item {
         width: Math.max(1, parent.width * (modelData.x1 - modelData.x0))
         height: parent.height
         radius: parent.radius
-        color: Util.alpha(strip.foreground, 0.28)
+        color: Compat.Util.alpha(strip.foreground, 0.28)
       }
     }
 
     Rectangle {
       id: nowMarker
-      width: Math.max(8, Style.space(10))
+      width: Math.max(8, Compat.Style.space(10))
       height: width
       radius: width / 2
       x: Math.round(parent.width * (strip.ready ? strip.progress : 0) - width / 2)
@@ -115,7 +115,7 @@ Item {
         color: strip.foreground
       }
 
-      Behavior on x { NumberAnimation { duration: Style.duration(400); easing.type: Easing.OutCubic } }
+      Behavior on x { NumberAnimation { duration: Compat.Style.duration(400); easing.type: Easing.OutCubic } }
     }
   }
 
@@ -165,10 +165,10 @@ Item {
       readonly property bool rising: modelData.rising
 
       // A finger-sized box around a caption-sized glyph, tucked towards the band.
-      width: Style.space(14)
-      height: Style.space(16)
+      width: Compat.Style.space(14)
+      height: Compat.Style.space(16)
       anchors.verticalCenter: parent.verticalCenter
-      x: Model.arrowBox(arrow.modelData.x, strip.width, arrow.width, Style.space(3), arrow.rising)
+      x: Model.arrowBox(arrow.modelData.x, strip.width, arrow.width, Compat.Style.space(3), arrow.rising)
 
       // Hidden while the now marker stands on it. nowMarker.x, not progress,
       // so it reappears exactly as the eased marker clears.
@@ -176,16 +176,16 @@ Item {
         var markerX = nowMarker.x
         if (!strip.ready) return false
         return Model.arrowCovered(arrow.x, arrow.width, markerX + nowMarker.width / 2,
-                                  nowMarker.width, Style.space(4))
+                                  nowMarker.width, Compat.Style.space(4))
       }
 
       // Gone rather than faded, so a hidden arrow is also untappable.
       opacity: strip.hovered && !arrow.covered ? 1 : 0
       visible: opacity > 0
-      Behavior on opacity { NumberAnimation { duration: Style.duration(160) } }
+      Behavior on opacity { NumberAnimation { duration: Compat.Style.duration(160) } }
 
       // Sunrise sits a little high and sunset a little low: a cue that needs no reading.
-      transform: Translate { y: arrow.rising ? -Style.space(2) : Style.space(2) }
+      transform: Translate { y: arrow.rising ? -Compat.Style.space(2) : Compat.Style.space(2) }
 
       onCoveredChanged: if (arrow.covered && strip.shownChip === arrow.index) strip.dismissChips()
 
@@ -195,7 +195,7 @@ Item {
         text: arrow.rising ? "\u2191" : "\u2193"
         color: arrowHover.hovered || strip.shownChip === arrow.index ? strip.foreground : strip.fainter
         font.family: strip.fontFamily
-        font.pixelSize: Style.font.caption
+        font.pixelSize: Compat.Style.font.caption
       }
 
       HoverHandler {

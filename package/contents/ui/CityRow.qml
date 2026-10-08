@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import "Commons"
+import "Commons" as Compat
 import "Ui"
 import "Model.js" as Model
 import "Greetings.js" as Greet
@@ -38,28 +38,28 @@ Rectangle {
   }
   readonly property real hoverLift: 0.05
 
-  readonly property int pad: Style.space(15)
-  readonly property int stripGap: Style.space(9)
+  readonly property int pad: Compat.Style.space(15)
+  readonly property int stripGap: Compat.Style.space(9)
 
   width: parent.width
   // The top pad is measured to the cap height, not the line box, so the row
   // looks as tall above the name as below the strip.
   implicitHeight: (pad - panel.capGap) + rowLabels.implicitHeight + stripGap + strip.trackHeight + pad
-  radius: Style.cornerRadius
+  radius: Compat.Style.cornerRadius
   // Opaque: knocked-aside rows pass over one another and over the globe.
   // Hover lifts a row from its own time of day. The picked city takes the
   // brightest lifted fill whatever its time of day, so a night row picked by the
   // arrow keys never reads darker than the daytime rows around it.
   readonly property bool picked: panel.focusIndex === index && !panel.addSelected
   readonly property bool lit: rowHover.hovered || picked
-  color: Model.mix(Color.popups.background, foreground,
+  color: Model.mix(Compat.Color.popups.background, foreground,
     picked ? dayFill + hoverLift : rowHover.hovered ? phaseFill + hoverLift : phaseFill)
 
   // Transforms leave the Column's layout alone: the knock that clears the
   // globe's way, then the drag offset.
   transform: [
     Translate {
-      x: Model.knockX(row.index, row.panel.zoom, Style.space(95))
+      x: Model.knockX(row.index, row.panel.zoom, Compat.Style.space(95))
       y: Model.knockY(row.index, row.panel.zoom, row.panel.knockFall)
     },
     Rotation {
@@ -79,13 +79,13 @@ Rectangle {
       // The dragged row follows the pointer one-to-one; the others ease aside.
       Behavior on y {
         enabled: !row.dragged
-        NumberAnimation { duration: Style.duration(130); easing.type: Easing.OutCubic }
+        NumberAnimation { duration: Compat.Style.duration(130); easing.type: Easing.OutCubic }
       }
     }
   ]
   z: dragged ? 2 : lit ? 1 : 0
   opacity: dragged ? 0.9 : 1
-  Behavior on opacity { NumberAnimation { duration: Style.duration(120) } }
+  Behavior on opacity { NumberAnimation { duration: Compat.Style.duration(120) } }
 
   HoverHandler { id: rowHover }
 
@@ -122,7 +122,7 @@ Rectangle {
       var dy = pointerY(mouse) - pressY
       // A few pixels of slack, so a click is never a reorder.
       if (!armed) {
-        if (Math.abs(dy) < Style.space(4)) return
+        if (Math.abs(dy) < Compat.Style.space(4)) return
         armed = true
         row.panel.beginRowDrag(row.index, row.height + row.parent.spacing)
       }
@@ -143,24 +143,24 @@ Rectangle {
   Column {
     id: rowLabels
     anchors.left: parent.left
-    anchors.leftMargin: Style.spacing.rowPaddingX
+    anchors.leftMargin: Compat.Style.spacing.rowPaddingX
     anchors.right: timeBlock.left
-    anchors.rightMargin: Style.spacing.xl
+    anchors.rightMargin: Compat.Style.spacing.xl
     anchors.top: parent.top
     anchors.topMargin: row.pad - row.panel.capGap
-    spacing: Style.space(2)
+    spacing: Compat.Style.space(2)
 
     // A layout so the name is what gives way when the line is tight.
     RowLayout {
       width: parent.width
-      spacing: Style.space(7)
+      spacing: Compat.Style.space(7)
 
       // Caps the name at its unelided width; the Text's own implicitWidth
       // shrinks as it elides, which would make the cap circular.
       TextMetrics {
         id: nameMetrics
         font.family: row.fontFamily
-        font.pixelSize: Style.font.subtitle
+        font.pixelSize: Compat.Style.font.subtitle
         font.weight: Font.DemiBold
         text: row.rowData.label
       }
@@ -174,7 +174,7 @@ Rectangle {
         text: row.rowData.label
         color: row.foreground
         font.family: row.fontFamily
-        font.pixelSize: Style.font.subtitle
+        font.pixelSize: Compat.Style.font.subtitle
         font.weight: Font.DemiBold
         elide: Text.ElideRight
       }
@@ -201,7 +201,7 @@ Rectangle {
         Layout.alignment: Qt.AlignBaseline
         text: row.panel.weatherGlyph(row.rowData)
         visible: text !== ""
-        font.pixelSize: Style.font.bodySmall
+        font.pixelSize: Compat.Style.font.bodySmall
       }
     }
 
@@ -216,10 +216,10 @@ Rectangle {
 
       Row {
         id: dateLine
-        spacing: Style.spacing.sm
+        spacing: Compat.Style.spacing.sm
         opacity: parent.greeting ? 0 : 1
         visible: opacity > 0
-        Behavior on opacity { NumberAnimation { duration: Style.duration(110) } }
+        Behavior on opacity { NumberAnimation { duration: Compat.Style.duration(110) } }
 
         Caption {
           text: row.ready ? row.rowData.date : "\u2026"
@@ -239,10 +239,10 @@ Rectangle {
       }
 
       Row {
-        spacing: Style.space(5)
+        spacing: Compat.Style.space(5)
         opacity: parent.greeting ? 1 : 0
         visible: opacity > 0
-        Behavior on opacity { NumberAnimation { duration: Style.duration(110) } }
+        Behavior on opacity { NumberAnimation { duration: Compat.Style.duration(110) } }
 
         // Non-Latin scripts fall back per character through fontconfig.
         Caption {
@@ -264,8 +264,8 @@ Rectangle {
     id: strip
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.leftMargin: Style.spacing.rowPaddingX
-    anchors.rightMargin: Style.spacing.rowPaddingX
+    anchors.leftMargin: Compat.Style.spacing.rowPaddingX
+    anchors.rightMargin: Compat.Style.spacing.rowPaddingX
     anchors.verticalCenter: parent.bottom
     anchors.verticalCenterOffset: -(row.pad + trackHeight / 2)
 
@@ -293,22 +293,22 @@ Rectangle {
   PanelActionButton {
     id: removeButton
     anchors.horizontalCenter: parent.right
-    anchors.horizontalCenterOffset: -Style.space(22) * 5 / 24
+    anchors.horizontalCenterOffset: -Compat.Style.space(22) * 5 / 24
     anchors.verticalCenter: parent.top
-    size: fontSize + (Style.space(22) - fontSize) * 0.85
+    size: fontSize + (Compat.Style.space(22) - fontSize) * 0.85
     radius: size / 2
-    color: Model.mix(Color.popups.background, row.foreground, _hot ? 0.24 : 0.14)
-    borderSpec: Border.flat(Model.mix(Color.popups.background, row.foreground, _hot ? 0.65 : 0.35), Style.space(1))
+    color: Model.mix(Compat.Color.popups.background, row.foreground, _hot ? 0.24 : 0.14)
+    borderSpec: Compat.Border.flat(Model.mix(Compat.Color.popups.background, row.foreground, _hot ? 0.65 : 0.35), Compat.Style.space(1))
     iconText: "\u00d7"
     tooltipText: "Remove"
     foreground: row.dim
     hoverColor: row.foreground
     fontFamily: row.fontFamily
-    fontSize: Style.font.bodySmall
+    fontSize: Compat.Style.font.bodySmall
     enabled: row.removable
     opacity: row.removable && (rowHover.hovered || removeButton._hot) ? 1 : 0
     visible: opacity > 0
-    Behavior on opacity { NumberAnimation { duration: Style.duration(120) } }
+    Behavior on opacity { NumberAnimation { duration: Compat.Style.duration(120) } }
     onClicked: row.panel.removeCityAt(row.index)
   }
 
@@ -317,15 +317,15 @@ Rectangle {
     // One width for every row, so the labels beside it line up.
     width: Math.max(row.panel.timeColumnWidth, implicitWidth)
     anchors.right: parent.right
-    anchors.rightMargin: Style.spacing.rowPaddingX
+    anchors.rightMargin: Compat.Style.spacing.rowPaddingX
     anchors.verticalCenter: rowLabels.verticalCenter
-    spacing: Style.space(1)
+    spacing: Compat.Style.space(1)
 
     // The hour is already the brightest thing on the row, so hover lifts the meridiem.
     LinkRow {
       id: timeLine
       anchors.right: parent.right
-      spacing: Style.spacing.xs
+      spacing: Compat.Style.spacing.xs
       onClicked: { row.panel.toggleHour24(); strip.dismissChips() }
 
       Text {
@@ -334,7 +334,7 @@ Rectangle {
         text: row.ready ? row.rowData.time : "--:--"
         color: row.foreground
         font.family: row.fontFamily
-        font.pixelSize: Style.font.heading
+        font.pixelSize: Compat.Style.font.heading
         font.weight: Font.DemiBold
       }
 
@@ -349,7 +349,7 @@ Rectangle {
     LinkRow {
       id: offsetLine
       anchors.right: parent.right
-      spacing: Style.space(5)
+      spacing: Compat.Style.space(5)
       visible: row.ready
       onClicked: { row.panel.toggleOffsetMode(); strip.dismissChips() }
 
@@ -370,7 +370,7 @@ Rectangle {
     textFormat: Text.PlainText
     color: row.dim
     font.family: row.fontFamily
-    font.pixelSize: Style.font.caption
+    font.pixelSize: Compat.Style.font.caption
   }
 
   component LinkRow: Row {

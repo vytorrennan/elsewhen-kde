@@ -1,5 +1,5 @@
 import QtQuick
-import "Commons"
+import "Commons" as Compat
 import "Ui"
 import "Model.js" as Model
 
@@ -19,11 +19,11 @@ Column {
   property string buttonText: "+  Add a city"
   property string placeholderText: "Search cities\u2026"
   property string loadingText: "Loading zones\u2026"
-  property real fontSize: Style.font.bodySmall
-  property color foreground: Color.foreground
+  property real fontSize: Compat.Style.font.bodySmall
+  property color foreground: Compat.Color.foreground
   property color dim: Qt.darker(foreground, 1.55)
   property color fainter: Qt.darker(foreground, 2.1)
-  property string fontFamily: Style.font.family
+  property string fontFamily: Compat.Style.font.family
 
   // False when the host shows CityMatches elsewhere.
   property bool inlineResults: true
@@ -61,10 +61,10 @@ Column {
   }
 
   function pickSelected() {
-    if (matches.length > 0) pick(matches[Util.clamp(selectedIndex, 0, matches.length - 1)])
+    if (matches.length > 0) pick(matches[Compat.Util.clamp(selectedIndex, 0, matches.length - 1)])
   }
 
-  spacing: Style.spacing.md
+  spacing: Compat.Style.spacing.md
 
   Button {
     width: parent.width

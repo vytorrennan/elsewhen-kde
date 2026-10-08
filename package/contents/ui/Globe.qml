@@ -1,6 +1,6 @@
 import QtQuick
 import "Io"
-import "Commons"
+import "Commons" as Compat
 import "Ui"
 import "GlobeModel.js" as Solar
 import "Model.js" as Model
@@ -10,15 +10,15 @@ import "Model.js" as Model
 Item {
   id: root
 
-  property color foreground: Color.foreground
+  property color foreground: Compat.Color.foreground
   property color dim: Qt.darker(foreground, 1.55)
   property color fainter: Qt.darker(foreground, 2.1)
   property color daylightMarker
   // Passed in so the footer's moon agrees with the rows' strips.
   property real moonPhase: 0.5
   // Night dots are dark so they read against the bright continents.
-  readonly property color nightMarker: Util.alpha(Color.background, 0.92)
-  property string fontFamily: Style.font.family
+  readonly property color nightMarker: Compat.Util.alpha(Compat.Color.background, 0.92)
+  property string fontFamily: Compat.Style.font.family
   property bool hour24: false
   // The panel's offset setting, and the offset "home" is measured from.
   property string offsetMode: "home"
@@ -29,7 +29,7 @@ Item {
   property real chromeOpacity: 1
 
   // Opaque tones mixed against the background, so the rows behind never show through.
-  readonly property color surfaceBase: Color.popups.background
+  readonly property color surfaceBase: Compat.Color.popups.background
   // Light names over sea, dark over land, split at the coastline.
   readonly property color seaInk: foreground
   readonly property color landInk: surfaceBase
@@ -131,7 +131,7 @@ Item {
     flightSpin.from = spin
     flightSpin.to = spin + Solar.shortestTurn(spin, lon)
     flightViewLat.from = viewLat
-    flightViewLat.to = Util.clamp(lat, -flyLatLimit, flyLatLimit)
+    flightViewLat.to = Compat.Util.clamp(lat, -flyLatLimit, flyLatLimit)
     flight.restart()
   }
 
@@ -183,14 +183,14 @@ Item {
   }
 
   // Sub-pixel scale (spaceReal, not space) so thin strokes keep their weights.
-  readonly property real uiScale: Style.spaceReal(1)
+  readonly property real uiScale: Compat.Style.spaceReal(1)
 
   function scaled(px) { return Solar.scalePx(px, uiScale, 1) }
 
-  readonly property real footerHeight: Style.space(34)
-  readonly property real jumpHeight: Style.space(4) + jumpSearch.implicitHeight
+  readonly property real footerHeight: Compat.Style.space(34)
+  readonly property real jumpHeight: Compat.Style.space(4) + jumpSearch.implicitHeight
   readonly property real radius: Math.max(40,
-    Math.min(width, height - footerHeight - jumpHeight) / 2 - Style.space(6))
+    Math.min(width, height - footerHeight - jumpHeight) / 2 - Compat.Style.space(6))
   readonly property var sub: Solar.subsolarPoint(nowMs)
 
   // FileView, not XMLHttpRequest: XHR on file:// comes back empty in the shell.
@@ -225,13 +225,13 @@ Item {
 
   // Labels count as part of their city and win over a neighbouring dot.
   function hitAt(px, py) {
-    var pad = Style.space(3)
+    var pad = Compat.Style.space(3)
     for (var i = 0; i < labels.length; i++) {
       var b = labels[i].box
       if (px >= b.x - pad && px <= b.x + b.w + pad
        && py >= b.y - pad && py <= b.y + b.h + pad) return labels[i].index
     }
-    var best = -1, bestD = Style.space(13)
+    var best = -1, bestD = Compat.Style.space(13)
     for (var j = 0; j < plotted.length; j++) {
       var d = Math.hypot(px - plotted[j].x, py - plotted[j].y)
       if (d < bestD) { bestD = d; best = plotted[j].index }
@@ -256,7 +256,7 @@ Item {
       if (a.rank !== b.rank) return a.rank - b.rank
       return b.cosc - a.cosc
     })
-    return Solar.declutter(cand, Style.space(19))
+    return Solar.declutter(cand, Compat.Style.space(19))
   }
 
   // ---- labels -----------------------------------------------------------
@@ -269,9 +269,9 @@ Item {
       cand.push({ index: p.index, name: allCities[p.index][0], x: p.x, y: p.y,
                   rank: p.keep ? 0 : p.rank, cosc: p.cosc })
     }
-    var charW = Style.font.caption * 0.62
-    return Solar.layoutLabels(cand, charW, Style.font.caption + Style.space(3), 14,
-                              width / 2 - Style.space(4), scaled(6))
+    var charW = Compat.Style.font.caption * 0.62
+    return Solar.layoutLabels(cand, charW, Compat.Style.font.caption + Compat.Style.space(3), 14,
+                              width / 2 - Compat.Style.space(4), scaled(6))
   }
 
   FileView {
@@ -337,9 +337,9 @@ Item {
   ParallelAnimation {
     id: flight
     NumberAnimation { id: flightSpin; target: root; property: "spin"
-                      duration: Style.duration(800); easing.type: Easing.OutCubic }
+                      duration: Compat.Style.duration(800); easing.type: Easing.OutCubic }
     NumberAnimation { id: flightViewLat; target: root; property: "viewLat"
-                      duration: Style.duration(800); easing.type: Easing.OutCubic }
+                      duration: Compat.Style.duration(800); easing.type: Easing.OutCubic }
   }
 
   // The throw: spin keeps going after the drag and eases to a stop.
@@ -384,7 +384,7 @@ Item {
         var city = root.allCities[idx]
         if (city === undefined) continue
         var strong = root.isHome(idx) || root.isTracked(idx)
-        ctx.font = (strong ? "bold " : "") + Style.font.caption
+        ctx.font = (strong ? "bold " : "") + Compat.Style.font.caption
                    + "px \"" + root.fontFamily + "\""
         ctx.fillText(city[0], L.box.x, L.box.y + L.box.h / 2)
       }
@@ -412,7 +412,7 @@ Item {
       ctx.fillStyle = Model.mix(root.surfaceBase, fg, 0.05)
       ctx.fill()
       ctx.lineWidth = root.scaled(1)
-      ctx.strokeStyle = Util.alpha(fg, 0.22)
+      ctx.strokeStyle = Compat.Util.alpha(fg, 0.22)
       ctx.stroke()
 
       // Graticule every 30 degrees, or 60 while moving.
@@ -430,7 +430,7 @@ Item {
         strokePath(ctx, pts)
       }
       ctx.lineWidth = root.scaled(1)
-      ctx.strokeStyle = Util.alpha(fg, 0.10)
+      ctx.strokeStyle = Compat.Util.alpha(fg, 0.10)
       ctx.stroke()
 
       // Land, filled bright with no coastline stroke (the stroke pass cost ~4 ms).
@@ -455,7 +455,7 @@ Item {
       ctx.beginPath()
       strokePath(ctx, Solar.terminator(root.sub, 180))
       ctx.lineWidth = root.scaled(1)
-      ctx.strokeStyle = Util.alpha(root.daylightMarker, 0.55)
+      ctx.strokeStyle = Compat.Util.alpha(root.daylightMarker, 0.55)
       ctx.stroke()
 
       // Cities: gold in daylight, dark at night, each edged in the opposite tone.
@@ -469,26 +469,26 @@ Item {
         ctx.fillStyle = day ? root.daylightMarker : root.nightMarker
         ctx.fill()
         ctx.lineWidth = root.scaled(1.2)
-        ctx.strokeStyle = day ? Util.alpha(Color.background, 0.7) : Util.alpha(fg, 0.85)
+        ctx.strokeStyle = day ? Compat.Util.alpha(Compat.Color.background, 0.7) : Compat.Util.alpha(fg, 0.85)
         ctx.stroke()
         if (root.isHome(i)) {
           ctx.beginPath()
           ctx.arc(p.x, p.y, root.scaled(3.4), 0, Math.PI * 2)
-          ctx.fillStyle = Color.accent
+          ctx.fillStyle = Compat.Color.accent
           ctx.fill()
           ctx.lineWidth = root.scaled(1.2)
-          ctx.strokeStyle = Util.alpha(Color.background, 0.5)
+          ctx.strokeStyle = Compat.Util.alpha(Compat.Color.background, 0.5)
           ctx.stroke()
           ctx.beginPath()
           ctx.arc(p.x, p.y, root.scaled(6.4), 0, Math.PI * 2)
           ctx.lineWidth = root.scaled(1.4)
-          ctx.strokeStyle = Util.alpha(Color.accent, 0.65)
+          ctx.strokeStyle = Compat.Util.alpha(Compat.Color.accent, 0.65)
           ctx.stroke()
         } else if (root.isTracked(i)) {
           ctx.beginPath()
           ctx.arc(p.x, p.y, root.scaled(4.6), 0, Math.PI * 2)
           ctx.lineWidth = root.scaled(1.3)
-          ctx.strokeStyle = Color.accent
+          ctx.strokeStyle = Compat.Color.accent
           ctx.stroke()
         }
         if (isSel) {
@@ -533,7 +533,7 @@ Item {
         var dx = mouse.x - lastX, dy = mouse.y - lastY
         if (Math.abs(dx) + Math.abs(dy) > 2) moved = true
         root.spin -= dx * root.dragSpinRate
-        root.viewLat = Util.clamp(root.viewLat + dy * root.dragTiltRate,
+        root.viewLat = Compat.Util.clamp(root.viewLat + dy * root.dragTiltRate,
                                   -root.dragLatLimit, root.dragLatLimit)
         root.velocity = -dx * root.dragSpinRate
         lastX = mouse.x; lastY = mouse.y
@@ -552,7 +552,7 @@ Item {
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: jumpSearch.top
-    anchors.bottomMargin: Style.space(4)
+    anchors.bottomMargin: Compat.Style.space(4)
     height: root.footerHeight
     opacity: root.chromeOpacity
 
@@ -600,10 +600,10 @@ Item {
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: jumpSearch.top
-    anchors.bottomMargin: Style.space(4)
-    height: Math.min(results.implicitHeight + Style.space(8),
-                     parent.height - root.jumpHeight - Style.space(20))
-    radius: Style.cornerRadius
+    anchors.bottomMargin: Compat.Style.space(4)
+    height: Math.min(results.implicitHeight + Compat.Style.space(8),
+                     parent.height - root.jumpHeight - Compat.Style.space(20))
+    radius: Compat.Style.cornerRadius
     color: root.surfaceBase
 
     CityMatches {
@@ -611,7 +611,7 @@ Item {
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: parent.top
-      anchors.margins: Style.space(4)
+      anchors.margins: Compat.Style.space(4)
       citySearch: jumpSearch
     }
   }

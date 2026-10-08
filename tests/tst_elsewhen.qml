@@ -1,6 +1,7 @@
 import QtQuick
 import QtTest
 import "../package/contents/ui"
+import "../package/contents/ui/Commons" as Compat
 
 TestCase {
     name: "ElsewhenPlasma"
@@ -21,6 +22,14 @@ TestCase {
         opened: true
         settings: ({zones: "São Paulo|America/Sao_Paulo, London|Europe/London, Tokyo|Asia/Tokyo", hour24: true})
     }
+    }
+
+    function test_themeHelpers() {
+        verify(Compat.Color.popups !== undefined)
+        verify(Compat.Color.popups.background.a > 0)
+        verify(Compat.Color.foreground.a > 0)
+        compare(clock.foreground, Compat.Color.foreground)
+        verify(Compat.Border.flat(Compat.Color.foreground, 1).width === 1)
     }
 
     function test_clockAndGlobe() {

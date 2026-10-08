@@ -1,5 +1,5 @@
 import QtQuick
-import "Commons"
+import "Commons" as Compat
 import "GlobeModel.js" as Solar
 
 // "World [globe] Clock" under an arched caption. The little globe is the door
@@ -10,9 +10,9 @@ Column {
   property string caption: ""
   property color captionColor: dim
   property bool captionClickable: false
-  property color foreground: Color.foreground
+  property color foreground: Compat.Color.foreground
   property color dim: Qt.darker(foreground, 1.55)
-  property string fontFamily: Style.font.family
+  property string fontFamily: Compat.Style.font.family
 
   // 0 is the list, 1 is the globe filling the panel.
   property real zoom: 0
@@ -50,15 +50,15 @@ Column {
     focusSpin.restart()
   }
 
-  spacing: Style.space(2)
+  spacing: Compat.Style.space(2)
 
   ArcText {
     width: parent.width
     text: hero.caption
-    rise: Style.space(6)
+    rise: Compat.Style.space(6)
     color: hero.captionColor
     fontFamily: hero.fontFamily
-    pixelSize: Style.font.caption
+    pixelSize: Compat.Style.font.caption
 
     MouseArea {
       anchors.fill: parent
@@ -70,15 +70,15 @@ Column {
 
   Row {
     anchors.horizontalCenter: parent.horizontalCenter
-    spacing: Style.space(9)
+    spacing: Compat.Style.space(9)
 
     TitleWord { text: "World" }
 
     Item {
       id: heroIcon
       anchors.verticalCenter: parent.verticalCenter
-      implicitWidth: Math.round(Style.font.display * 1.3)
-      implicitHeight: Math.round(Style.font.display * 1.3)
+      implicitWidth: Math.round(Compat.Style.font.display * 1.3)
+      implicitHeight: Math.round(Compat.Style.font.display * 1.3)
 
       // Degrees of longitude facing the viewer; the globe draws the spin itself.
       property real spin: 0
@@ -102,7 +102,7 @@ Column {
         font.pixelSize: Math.round(heroIcon.width * 0.8)
         // The globe leans with the earth; the cross stays upright.
         rotation: -Solar.AXIAL_TILT
-        opacity: Util.clamp((hero.zoom - 0.2) / 0.35, 0, 1)
+        opacity: Compat.Util.clamp((hero.zoom - 0.2) / 0.35, 0, 1)
         visible: opacity > 0
       }
 
@@ -137,7 +137,7 @@ Column {
         id: globeSpin
         target: heroIcon
         property: "spin"
-        duration: Style.duration(1250)
+        duration: Compat.Style.duration(1250)
         easing.type: Easing.OutQuart
       }
 
@@ -145,7 +145,7 @@ Column {
         id: focusSpin
         target: heroIcon
         property: "spin"
-        duration: Style.duration(700)
+        duration: Compat.Style.duration(700)
         easing.type: Easing.OutCubic
       }
     }
@@ -158,7 +158,7 @@ Column {
     textFormat: Text.PlainText
     color: hero.foreground
     font.family: hero.fontFamily
-    font.pixelSize: Style.font.title
+    font.pixelSize: Compat.Style.font.title
     font.weight: Font.DemiBold
   }
 }

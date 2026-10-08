@@ -1,5 +1,5 @@
 import QtQuick
-import "Commons"
+import "Commons" as Compat
 import "Arc.js" as Arc
 
 // One line of text arched over what sits below it, each character turned to
@@ -11,9 +11,9 @@ Item {
   property string text: ""
   // How far the ends drop below the middle.
   property real rise: 6
-  property string fontFamily: Style.font.family
-  property int pixelSize: Style.font.caption
-  property color color: Color.foreground
+  property string fontFamily: Compat.Style.font.family
+  property int pixelSize: Compat.Style.font.caption
+  property color color: Compat.Color.foreground
 
   FontMetrics {
     id: metrics

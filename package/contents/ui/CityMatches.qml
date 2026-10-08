@@ -1,5 +1,5 @@
 import QtQuick
-import "Commons"
+import "Commons" as Compat
 import "Ui"
 
 // The matches for a CitySearch; hosts that overlay results place this themselves.
@@ -8,7 +8,7 @@ Column {
 
   required property var citySearch
 
-  spacing: Style.space(2)
+  spacing: Compat.Style.space(2)
 
   Repeater {
     model: list.citySearch.matches
@@ -19,15 +19,15 @@ Column {
       required property int index
 
       width: parent.width
-      implicitHeight: Style.spacing.popupRowHeight
+      implicitHeight: Compat.Style.spacing.popupRowHeight
       foreground: list.citySearch.foreground
       hasCursor: list.citySearch.selectedIndex === index
 
       Text {
         anchors.left: parent.left
-        anchors.leftMargin: Style.spacing.xl
+        anchors.leftMargin: Compat.Style.spacing.xl
         anchors.right: matchZone.left
-        anchors.rightMargin: Style.spacing.lg
+        anchors.rightMargin: Compat.Style.spacing.lg
         anchors.verticalCenter: parent.verticalCenter
         textFormat: Text.PlainText
         text: match.modelData.label
@@ -41,9 +41,9 @@ Column {
       Row {
         id: matchZone
         anchors.right: parent.right
-        anchors.rightMargin: Style.spacing.xl
+        anchors.rightMargin: Compat.Style.spacing.xl
         anchors.verticalCenter: parent.verticalCenter
-        spacing: Style.spacing.md
+        spacing: Compat.Style.spacing.md
 
         Caption {
           text: match.modelData.value
@@ -72,7 +72,7 @@ Column {
     visible: list.citySearch.matches.length === 0
     width: parent.width
     horizontalAlignment: Text.AlignHCenter
-    topPadding: Style.spacing.md
+    topPadding: Compat.Style.spacing.md
     text: list.citySearch.loading ? list.citySearch.loadingText : "No matches"
     color: list.citySearch.fainter
   }
@@ -81,6 +81,6 @@ Column {
     textFormat: Text.PlainText
     color: list.citySearch.dim
     font.family: list.citySearch.fontFamily
-    font.pixelSize: Style.font.caption
+    font.pixelSize: Compat.Style.font.caption
   }
 }

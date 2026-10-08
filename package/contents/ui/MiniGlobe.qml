@@ -1,6 +1,6 @@
 import QtQuick
 import "Io"
-import "Commons"
+import "Commons" as Compat
 import "GlobeModel.js" as Solar
 import "Model.js" as Model
 
@@ -10,7 +10,7 @@ Item {
   id: root
 
   property real spin: 0
-  property color color: Color.foreground
+  property color color: Compat.Color.foreground
   // Below this size land turns to noise; draw the graticule alone.
   readonly property bool showLand: width >= 22
 
@@ -23,7 +23,7 @@ Item {
   property bool showMarker: false
   property real markerLat: 0
   property real markerLon: 0
-  property color markerColor: Color.accent
+  property color markerColor: Compat.Color.accent
 
   readonly property real radius: Math.min(width, height) / 2 - 1
   readonly property string pluginDir: Qt.resolvedUrl(".").toString().replace(/\/$/, "")
@@ -67,7 +67,7 @@ Item {
       // The ocean, opaque like the large globe.
       ctx.beginPath()
       ctx.arc(0, 0, r, 0, Math.PI * 2)
-      ctx.fillStyle = Model.mix(Color.popups.background, c, root.bold ? 0.16 : 0.13)
+      ctx.fillStyle = Model.mix(Compat.Color.popups.background, c, root.bold ? 0.16 : 0.13)
       ctx.fill()
 
       ctx.save()
@@ -86,7 +86,7 @@ Item {
       for (lon = -180; lon <= 180; lon += 6) pts.push([0, lon])
       strokePath(ctx, pts)
       ctx.lineWidth = Math.max(1, r * (root.bold ? 0.055 : 0.045))
-      ctx.strokeStyle = Util.alpha(c, root.showLand ? (root.bold ? 0.42 : 0.30) : 0.85)
+      ctx.strokeStyle = Compat.Util.alpha(c, root.showLand ? (root.bold ? 0.42 : 0.30) : 0.85)
       ctx.stroke()
 
       if (root.showLand && root.land.length > 0) {
@@ -101,7 +101,7 @@ Item {
           for (var q = 1; q < poly.length; q++) ctx.lineTo(poly[q].x, poly[q].y)
           ctx.closePath()
         }
-        ctx.fillStyle = Util.alpha(c, root.bold ? 1.0 : 0.85)
+        ctx.fillStyle = Compat.Util.alpha(c, root.bold ? 1.0 : 0.85)
         ctx.fill()
       }
 
@@ -116,13 +116,13 @@ Item {
           ctx.fill()
           // Edged so it does not dissolve into a continent of similar lightness.
           ctx.lineWidth = Math.max(1, r * 0.04)
-          ctx.strokeStyle = Util.alpha(Color.background, 0.5)
+          ctx.strokeStyle = Compat.Util.alpha(Compat.Color.background, 0.5)
           ctx.stroke()
 
           ctx.beginPath()
           ctx.arc(mp.x, mp.y, mr * 1.9, 0, Math.PI * 2)
           ctx.lineWidth = Math.max(1, r * 0.045)
-          ctx.strokeStyle = Util.alpha(root.markerColor, 0.65)
+          ctx.strokeStyle = Compat.Util.alpha(root.markerColor, 0.65)
           ctx.stroke()
         }
       }
@@ -133,7 +133,7 @@ Item {
       ctx.beginPath()
       ctx.arc(0, 0, r, 0, Math.PI * 2)
       ctx.lineWidth = Math.max(1, r * (root.bold ? 0.095 : 0.08))
-      ctx.strokeStyle = Util.alpha(c, root.bold ? 1.0 : 0.95)
+      ctx.strokeStyle = Compat.Util.alpha(c, root.bold ? 1.0 : 0.95)
       ctx.stroke()
     }
   }

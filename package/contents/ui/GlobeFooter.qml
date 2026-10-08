@@ -1,6 +1,5 @@
 import QtQuick
-import "Commons"
-
+import "Commons" as Compat
 // The selected city under the globe: name, local time and badge, then its
 // zone and offset. Blank without a selection; the parent reserves the height.
 Item {
@@ -12,11 +11,11 @@ Item {
   property string offsetLabel: ""
   property string badge: ""             // "home", "tracked" or ""
   property real moonPhase: 0.5
-  property color foreground: Color.foreground
+  property color foreground: Compat.Color.foreground
   property color dim: Qt.darker(foreground, 1.55)
   property color fainter: Qt.darker(foreground, 2.1)
   property color daylightMarker
-  property string fontFamily: Style.font.family
+  property string fontFamily: Compat.Style.font.family
 
   signal offsetClicked()
 
@@ -27,7 +26,7 @@ Item {
   TextMetrics {
     id: capHeight
     font.family: root.fontFamily
-    font.pixelSize: Style.font.caption
+    font.pixelSize: Compat.Style.font.caption
     font.weight: Font.DemiBold
     text: "M"
   }
@@ -35,16 +34,16 @@ Item {
   Column {
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.verticalCenter: parent.verticalCenter
-    spacing: Style.space(1)
+    spacing: Compat.Style.space(1)
     visible: root.has
 
     Row {
       anchors.horizontalCenter: parent.horizontalCenter
-      spacing: Style.space(7)
+      spacing: Compat.Style.space(7)
 
       Row {
         anchors.verticalCenter: parent.verticalCenter
-        spacing: Style.space(4)
+        spacing: Compat.Style.space(4)
 
         // A lit dot by day, tonight's moon by night, as on the rows' strips.
         // Placed on the name's baseline by y: anchors.baseline inside a Row loops.
@@ -70,7 +69,7 @@ Item {
           text: root.has ? root.city[0] : ""
           color: root.foreground
           font.family: root.fontFamily
-          font.pixelSize: Style.font.caption
+          font.pixelSize: Compat.Style.font.caption
           font.weight: Font.DemiBold
         }
       }
@@ -82,7 +81,7 @@ Item {
         visible: text !== ""
         color: root.dim
         font.family: root.fontFamily
-        font.pixelSize: Style.font.caption
+        font.pixelSize: Compat.Style.font.caption
       }
 
       Text {
@@ -90,23 +89,23 @@ Item {
         textFormat: Text.PlainText
         text: root.badge
         visible: root.has && text !== ""
-        color: Color.accent
+        color: Compat.Color.accent
         font.family: root.fontFamily
-        font.pixelSize: Style.font.caption
+        font.pixelSize: Compat.Style.font.caption
       }
     }
 
     // Zone and offset together are the toggle, so it survives a blank offset.
     Row {
       anchors.horizontalCenter: parent.horizontalCenter
-      spacing: Style.space(6)
+      spacing: Compat.Style.space(6)
 
       Text {
         textFormat: Text.PlainText
         text: root.has ? root.city[1] : ""
         color: offsetHover.hovered ? root.dim : root.fainter
         font.family: root.fontFamily
-        font.pixelSize: Style.font.caption
+        font.pixelSize: Compat.Style.font.caption
       }
 
       Text {
@@ -115,7 +114,7 @@ Item {
         visible: text !== ""
         color: offsetHover.hovered ? root.foreground : root.dim
         font.family: root.fontFamily
-        font.pixelSize: Style.font.caption
+        font.pixelSize: Compat.Style.font.caption
       }
 
       HoverHandler {

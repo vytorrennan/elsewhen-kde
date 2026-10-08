@@ -1,6 +1,6 @@
 import QtQuick
 import "Io"
-import "Commons"
+import "Commons" as Compat
 import "Ui"
 import "Model.js" as Model
 import "GlobeModel.js" as Solar
@@ -85,22 +85,22 @@ Item {
   implicitWidth: 388
   implicitHeight: 600
 
-  readonly property color foreground: bar ? bar.foreground : Color.foreground
+  readonly property color foreground: bar ? bar.foreground : Compat.Color.foreground
   readonly property color dim: Qt.darker(foreground, 1.55)
   readonly property color fainter: Qt.darker(foreground, 2.1)
   // A literal gold: several themes' "yellow" is not yellow.
   readonly property color daylightMarker: "#E5C736"
-  readonly property string fontFamily: bar ? bar.fontFamily : Style.font.family
+  readonly property string fontFamily: bar ? bar.fontFamily : Compat.Style.font.family
 
   // ---- the zoom
   // One number drives the list-to-globe transition: 0 is the list, 1 the globe.
   property bool globeMode: false
   property real zoom: globeMode ? 1 : 0
   readonly property bool zoomIdle: zoom === 0 || zoom === 1
-  readonly property real bigGlobeOpacity: Util.clamp(zoom / 0.12, 0, 1)
-  readonly property real globeStageHeight: Style.space(378)
+  readonly property real bigGlobeOpacity: Compat.Util.clamp(zoom / 0.12, 0, 1)
+  readonly property real globeStageHeight: Compat.Style.space(378)
   // Far enough for the top row to fall past the whole list.
-  readonly property real knockFall: listWrap.implicitHeight + Style.space(220)
+  readonly property real knockFall: listWrap.implicitHeight + Compat.Style.space(220)
 
   // Shift-click the globe to run the transition at a third of the speed.
   readonly property int slowMotionFactor: 3
@@ -347,13 +347,13 @@ Item {
   FontMetrics {
     id: nameFontMetrics
     font.family: root.fontFamily
-    font.pixelSize: Style.font.subtitle
+    font.pixelSize: Compat.Style.font.subtitle
   }
 
   TextMetrics {
     id: nameCapMetrics
     font.family: root.fontFamily
-    font.pixelSize: Style.font.subtitle
+    font.pixelSize: Compat.Style.font.subtitle
     text: "M"
   }
 
@@ -365,7 +365,7 @@ Item {
   TextMetrics {
     id: widestTimeMetrics
     font.family: root.fontFamily
-    font.pixelSize: Style.font.heading
+    font.pixelSize: Compat.Style.font.heading
     font.weight: Font.DemiBold
     text: "00:00"
   }
@@ -373,12 +373,12 @@ Item {
   TextMetrics {
     id: meridiemMetrics
     font.family: root.fontFamily
-    font.pixelSize: Style.font.caption
+    font.pixelSize: Compat.Style.font.caption
     text: "PM"
   }
 
   readonly property real timeColumnWidth: Math.ceil(widestTimeMetrics.advanceWidth
-    + (hour24 ? 0 : Style.spacing.xs + meridiemMetrics.advanceWidth))
+    + (hour24 ? 0 : Compat.Style.spacing.xs + meridiemMetrics.advanceWidth))
 
   function tick() {
     nowMs = Date.now()
@@ -635,7 +635,7 @@ Item {
   // Heavy on the way out, brisk on the way back.
   Behavior on zoom {
     NumberAnimation {
-      duration: Style.duration(root.zoomDuration)
+      duration: Compat.Style.duration(root.zoomDuration)
       easing.type: root.zoomEasing
     }
   }
@@ -653,14 +653,14 @@ Item {
 
   Behavior on moonDemo {
     enabled: root.moonShowing
-    NumberAnimation { duration: Style.duration(460); easing.type: Easing.InOutSine }
+    NumberAnimation { duration: Compat.Style.duration(460); easing.type: Easing.InOutSine }
   }
 
   NumberAnimation {
     id: dropAnimation
     target: root
     property: "dragOffset"
-    duration: Style.duration(150)
+    duration: Compat.Style.duration(150)
     easing.type: Easing.OutCubic
     onFinished: root.commitRowDrag()
   }
@@ -736,7 +736,7 @@ Item {
       Flickable {
         id: scroller
         anchors.fill: parent
-        anchors.rightMargin: -Style.space(12)
+        anchors.rightMargin: -Compat.Style.space(12)
         clip: true
         interactive: false
         contentWidth: width
@@ -745,7 +745,7 @@ Item {
 
         readonly property real maxScroll: Math.max(0, contentHeight - height)
 
-        function clamp() { contentY = Util.clamp(contentY, 0, maxScroll) }
+        function clamp() { contentY = Compat.Util.clamp(contentY, 0, maxScroll) }
         onHeightChanged: clamp()
         onContentHeightChanged: clamp()
 
@@ -766,14 +766,14 @@ Item {
           id: scrollAnim
           target: scroller
           property: "contentY"
-          duration: Style.duration(160)
+          duration: Compat.Style.duration(160)
           easing.type: Easing.OutCubic
         }
 
         WheelHandler {
           acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
           onWheel: function(event) {
-            var d = event.pixelDelta.y !== 0 ? event.pixelDelta.y : event.angleDelta.y / 120 * Style.space(40)
+            var d = event.pixelDelta.y !== 0 ? event.pixelDelta.y : event.angleDelta.y / 120 * Compat.Style.space(40)
             scroller.contentY -= d
             scroller.clamp()
           }
@@ -781,15 +781,15 @@ Item {
 
         Column {
           id: content
-          width: scroller.width - Style.space(12)
-          spacing: Style.spacing.panelGap
+          width: scroller.width - Compat.Style.space(12)
+          spacing: Compat.Style.spacing.panelGap
 
           HeroTitle {
             id: hero
             width: parent.width
             caption: root.hereLine
             // Accent while scrubbed, so a shifted time is never taken for now.
-            captionColor: root.scrubMinutes !== 0 ? Color.accent : root.dim
+            captionColor: root.scrubMinutes !== 0 ? Compat.Color.accent : root.dim
             captionClickable: root.focusIndex >= 0
             foreground: root.foreground
             dim: root.dim
@@ -818,20 +818,20 @@ Item {
             Item {
               anchors.fill: parent
               // Let circular actions straddle the rows' top-right corners.
-              anchors.topMargin: -Style.space(12)
-              anchors.rightMargin: -Style.space(12)
+              anchors.topMargin: -Compat.Style.space(12)
+              anchors.rightMargin: -Compat.Style.space(12)
               clip: true
 
               Column {
                 id: listWrap
-                y: Style.space(12)
+                y: Compat.Style.space(12)
                 width: stage.width
-                spacing: Style.spacing.panelGap
+                spacing: Compat.Style.spacing.panelGap
 
                 Column {
                   visible: root.zoom < 1
                   width: parent.width
-                  spacing: Style.spacing.md
+                  spacing: Compat.Style.spacing.md
 
                   // The zone list, not clockRows: that ticks, and would
                   // rebuild every delegate mid-drag.
@@ -862,7 +862,7 @@ Item {
 
                   // Knocked aside last, after every row.
                   transform: Translate {
-                    x: Model.knockX(root.zones.length, root.zoom, Style.space(95))
+                    x: Model.knockX(root.zones.length, root.zoom, Compat.Style.space(95))
                     y: Model.knockY(root.zones.length, root.zoom, root.knockFall)
                   }
                 }
@@ -924,7 +924,7 @@ Item {
                 item.transitioning = Qt.binding(function() { return !root.zoomIdle })
                 item.zoomLevel = Qt.binding(function() { return root.zoom })
                 // The footer and jump bar arrive once the globe has landed.
-                item.chromeOpacity = Qt.binding(function() { return Util.clamp((root.zoom - 0.74) / 0.26, 0, 1) })
+                item.chromeOpacity = Qt.binding(function() { return Compat.Util.clamp((root.zoom - 0.74) / 0.26, 0, 1) })
                 item.jumpOptions = Qt.binding(function() { return root.allZoneOptions })
                 item.offsetModeToggleRequested.connect(function() { root.toggleOffsetMode() })
                 item.jumpRequested.connect(function(label, zone) { root.addSessionCity(label, zone) })

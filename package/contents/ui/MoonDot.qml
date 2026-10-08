@@ -1,5 +1,5 @@
 import QtQuick
-import "Commons"
+import "Commons" as Compat
 import "GlobeModel.js" as Solar
 
 // The night marker drawn as the moon's current phase. The faint full disc
@@ -8,7 +8,7 @@ Item {
   id: root
 
   property real phase: 0            // 0 new, 0.25 first quarter, 0.5 full
-  property color color: Color.foreground
+  property color color: Compat.Color.foreground
 
   onPhaseChanged: canvas.requestPaint()
   onColorChanged: canvas.requestPaint()
@@ -29,7 +29,7 @@ Item {
       // The whole disc, faint.
       ctx.beginPath()
       ctx.arc(0, 0, r, 0, Math.PI * 2)
-      ctx.fillStyle = Util.alpha(c, 0.22)
+      ctx.fillStyle = Compat.Util.alpha(c, 0.22)
       ctx.fill()
 
       // The lit part, solid.
